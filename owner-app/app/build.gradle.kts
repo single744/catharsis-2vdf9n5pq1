@@ -10,6 +10,15 @@ fun configuredValue(name: String): String =
 fun quoted(value: String): String =
     "\"${value.replace("\\", "\\\\").replace("\"", "\\\"")}\""
 
+val ownerApiBase =
+    configuredValue("OWNER_API_BASE")
+        .trimEnd('/')
+        .ifBlank { "https://catharsis-escape.sosirusok.chatgpt.site" }
+
+require(ownerApiBase.startsWith("https://")) {
+    "OWNER_API_BASE must use HTTPS."
+}
+
 android {
     namespace = "kr.co.catharsis.owner"
     compileSdk = 35
@@ -24,11 +33,7 @@ android {
         versionName = "1.0.$ciVersionCode"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField(
-            "String",
-            "API_BASE",
-            "\"https://catharsis-escape.sosirusok.chatgpt.site\"",
-        )
+        buildConfigField("String", "API_BASE", quoted(ownerApiBase))
         buildConfigField("String", "FIREBASE_APP_ID", quoted(configuredValue("OWNER_FIREBASE_APP_ID")))
         buildConfigField("String", "FIREBASE_PROJECT_ID", quoted(configuredValue("OWNER_FIREBASE_PROJECT_ID")))
         buildConfigField("String", "FIREBASE_SENDER_ID", quoted(configuredValue("OWNER_FIREBASE_SENDER_ID")))

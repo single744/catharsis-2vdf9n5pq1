@@ -102,6 +102,15 @@ class AlertDatabaseHelper(
         writableDatabase.delete("alerts", null, null)
     }
 
+    @Synchronized
+    fun pruneExpired() {
+        writableDatabase.delete(
+            "alerts",
+            "service_date < date('now', '-5 years')",
+            null,
+        )
+    }
+
     private fun readState(id: Long): Boolean? =
         readableDatabase
             .query(

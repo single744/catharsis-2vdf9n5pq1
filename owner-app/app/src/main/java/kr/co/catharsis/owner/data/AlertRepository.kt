@@ -47,6 +47,7 @@ class AlertRepository(
         FirebaseBootstrap.isConfigured && preferences.getBoolean(KEY_PUSH_REGISTERED, false)
 
     fun loadLocalHistory() {
+        database.pruneExpired()
         _alerts.value = database.all()
     }
 
@@ -129,6 +130,7 @@ class AlertRepository(
                         }
                     }
 
+                    database.pruneExpired()
                     _alerts.value = database.all()
                     if (reachedNewestAlert) {
                         preferences.edit().putBoolean(KEY_INITIAL_SYNC, true).apply()
