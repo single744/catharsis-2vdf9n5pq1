@@ -4,8 +4,11 @@ import { resolve } from "node:path";
 
 const target = process.env.PAGES_TARGET;
 const base = process.env.PAGES_BASE;
-const publicApiOrigin = process.env.PUBLIC_API_ORIGIN || "https://catharsis-escape.sosirusok.chatgpt.site";
+const publicApiOrigin = process.env.PUBLIC_API_ORIGIN?.trim() ?? "";
 
+if (!publicApiOrigin) {
+  throw new Error("PUBLIC_API_ORIGIN is required (the booking API origin, e.g. https://api.example.com)");
+}
 if (!/^https:\/\/[a-z0-9.-]+(?::\d+)?$/i.test(publicApiOrigin)) {
   throw new Error("PUBLIC_API_ORIGIN must be an HTTPS origin without a path");
 }

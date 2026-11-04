@@ -56,7 +56,7 @@
     npm run lint
     npm test
 
-GitHub Actions는 main에서 코드 검사, 프로덕션 빌드, 기능 테스트와 GitHub Pages 배포를 자동 실행합니다.
+GitHub Actions는 main에서 코드 검사, 프로덕션 빌드, 기능 테스트와 GitHub Pages 배포를 자동 실행합니다. 화면 빌드에는 예약 API 주소가 필요하므로 저장소의 `Settings` → `Secrets and variables` → `Actions`에 `PUBLIC_API_ORIGIN`(예: `https://api.example.com`)을 등록해 둡니다. 로컬에서 화면을 빌드할 때도 같은 이름의 환경변수를 지정합니다.
 
 ## 네이버페이 운영 설정
 

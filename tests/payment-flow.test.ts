@@ -119,7 +119,7 @@ test("payment confirmation, idempotent recovery, refund, and device revocation s
   const database = new DatabaseSync(":memory:");
   applyMigrations(database);
   const d1 = new SqliteD1(database);
-  (globalThis as typeof globalThis & { __SITES_ENV__?: unknown }).__SITES_ENV__ = {
+  (globalThis as typeof globalThis & { __RUNTIME_ENV__?: unknown }).__RUNTIME_ENV__ = {
     DB: d1,
     TOSS_CLIENT_KEY: ["test", "gck", "unit"].join("_"),
     TOSS_SECRET_KEY: ["test", "gsk", "unit"].join("_"),
@@ -167,7 +167,7 @@ test("provider 5xx recovers from the authoritative payment and slot uniqueness b
   const database = new DatabaseSync(":memory:");
   applyMigrations(database);
   const d1 = new SqliteD1(database);
-  (globalThis as typeof globalThis & { __SITES_ENV__?: unknown }).__SITES_ENV__ = {
+  (globalThis as typeof globalThis & { __RUNTIME_ENV__?: unknown }).__RUNTIME_ENV__ = {
     DB: d1,
     TOSS_CLIENT_KEY: ["test", "gck", "unit"].join("_"),
     TOSS_SECRET_KEY: ["test", "gsk", "unit"].join("_"),
@@ -199,7 +199,7 @@ test("legacy Toss reconciliation still finds a provider payment when the callbac
   const database = new DatabaseSync(":memory:");
   applyMigrations(database);
   const d1 = new SqliteD1(database);
-  (globalThis as typeof globalThis & { __SITES_ENV__?: unknown }).__SITES_ENV__ = {
+  (globalThis as typeof globalThis & { __RUNTIME_ENV__?: unknown }).__RUNTIME_ENV__ = {
     DB: d1,
     TOSS_CLIENT_KEY: ["test", "gck", "unit"].join("_"),
     TOSS_SECRET_KEY: ["test", "gsk", "unit"].join("_"),
@@ -229,7 +229,7 @@ test("Naver Pay approval validates the merchant order and customer cancellation 
   const database = new DatabaseSync(":memory:");
   applyMigrations(database);
   const d1 = new SqliteD1(database);
-  (globalThis as typeof globalThis & { __SITES_ENV__?: unknown }).__SITES_ENV__ = naverCheckoutEnv(d1);
+  (globalThis as typeof globalThis & { __RUNTIME_ENV__?: unknown }).__RUNTIME_ENV__ = naverCheckoutEnv(d1);
   seedReservation(database, "naver8", "slot-naver");
   database.prepare("UPDATE reservations SET payment_provider = 'naverpay', payment_tax_scope_amount = 44000, payment_tax_ex_scope_amount = 0 WHERE id = 'naver8'").run();
 
@@ -313,7 +313,7 @@ test("historical Naver refunds work while inactive and CancelNotComplete is late
   const database = new DatabaseSync(":memory:");
   applyMigrations(database);
   const d1 = new SqliteD1(database);
-  (globalThis as typeof globalThis & { __SITES_ENV__?: unknown }).__SITES_ENV__ = {
+  (globalThis as typeof globalThis & { __RUNTIME_ENV__?: unknown }).__RUNTIME_ENV__ = {
     DB: d1,
     PAYMENT_PROVIDER: "disabled",
     NAVER_PAY_MODE: "development",
@@ -378,7 +378,7 @@ test("Naver Pay approval response loss is not retried before the 180-second reco
   const database = new DatabaseSync(":memory:");
   applyMigrations(database);
   const d1 = new SqliteD1(database);
-  (globalThis as typeof globalThis & { __SITES_ENV__?: unknown }).__SITES_ENV__ = naverCheckoutEnv(d1);
+  (globalThis as typeof globalThis & { __RUNTIME_ENV__?: unknown }).__RUNTIME_ENV__ = naverCheckoutEnv(d1);
   seedReservation(database, "naver9", "slot-naver-timeout");
   database.prepare("UPDATE reservations SET payment_provider = 'naverpay', payment_tax_scope_amount = 44000, payment_tax_ex_scope_amount = 0 WHERE id = 'naver9'").run();
 
@@ -431,7 +431,7 @@ test("a Naver paymentId submitted with the wrong state is relinked to its verifi
   const database = new DatabaseSync(":memory:");
   applyMigrations(database);
   const d1 = new SqliteD1(database);
-  (globalThis as typeof globalThis & { __SITES_ENV__?: unknown }).__SITES_ENV__ = naverCheckoutEnv(d1);
+  (globalThis as typeof globalThis & { __RUNTIME_ENV__?: unknown }).__RUNTIME_ENV__ = naverCheckoutEnv(d1);
   seedReservation(database, "wrong1", "slot-wrong", "ready", 630);
   seedReservation(database, "right2", "slot-right", "ready", 750);
   database.prepare("UPDATE reservations SET payment_provider='naverpay', payment_tax_scope_amount=44000 WHERE id IN ('wrong1','right2')").run();
@@ -479,7 +479,7 @@ test("scheduled history reconciliation repairs a wrong paymentId claim left behi
   const database = new DatabaseSync(":memory:");
   applyMigrations(database);
   const d1 = new SqliteD1(database);
-  (globalThis as typeof globalThis & { __SITES_ENV__?: unknown }).__SITES_ENV__ = naverCheckoutEnv(d1);
+  (globalThis as typeof globalThis & { __RUNTIME_ENV__?: unknown }).__RUNTIME_ENV__ = naverCheckoutEnv(d1);
   seedReservation(database, "crash1", "slot-crash-wrong", "ready", 630);
   seedReservation(database, "crash2", "slot-crash-right", "ready", 750);
   database.prepare("UPDATE reservations SET payment_provider='naverpay', payment_tax_scope_amount=44000 WHERE id IN ('crash1','crash2')").run();
@@ -524,7 +524,7 @@ test("scheduled Naver reconciliation sends an approved amount mismatch to owner 
   const database = new DatabaseSync(":memory:");
   applyMigrations(database);
   const d1 = new SqliteD1(database);
-  (globalThis as typeof globalThis & { __SITES_ENV__?: unknown }).__SITES_ENV__ = naverCheckoutEnv(d1);
+  (globalThis as typeof globalThis & { __RUNTIME_ENV__?: unknown }).__RUNTIME_ENV__ = naverCheckoutEnv(d1);
   seedReservation(database, "crashm1", "slot-crash-amount", "ready", 630);
   database.prepare("UPDATE reservations SET payment_provider='naverpay', payment_tax_scope_amount=44000, payment_status='confirming', payment_key='npay_crashm1', payment_provider_checked_at=0, updated_at='2026-08-15 00:00:00' WHERE id='crashm1'").run();
   const originalFetch = globalThis.fetch;
@@ -557,7 +557,7 @@ test("a Naver 200 response without a success code remains reviewable instead of 
   const database = new DatabaseSync(":memory:");
   applyMigrations(database);
   const d1 = new SqliteD1(database);
-  (globalThis as typeof globalThis & { __SITES_ENV__?: unknown }).__SITES_ENV__ = naverCheckoutEnv(d1);
+  (globalThis as typeof globalThis & { __RUNTIME_ENV__?: unknown }).__RUNTIME_ENV__ = naverCheckoutEnv(d1);
   seedReservation(database, "badjson", "slot-bad-json");
   database.prepare("UPDATE reservations SET payment_provider='naverpay', payment_tax_scope_amount=44000 WHERE id='badjson'").run();
   const originalFetch = globalThis.fetch;
@@ -579,7 +579,7 @@ test("a Naver approval with a mismatched amount remains reviewable instead of be
   const database = new DatabaseSync(":memory:");
   applyMigrations(database);
   const d1 = new SqliteD1(database);
-  (globalThis as typeof globalThis & { __SITES_ENV__?: unknown }).__SITES_ENV__ = naverCheckoutEnv(d1);
+  (globalThis as typeof globalThis & { __RUNTIME_ENV__?: unknown }).__RUNTIME_ENV__ = naverCheckoutEnv(d1);
   seedReservation(database, "amount1", "slot-amount-mismatch");
   database.prepare("UPDATE reservations SET payment_provider='naverpay', payment_tax_scope_amount=44000 WHERE id='amount1'").run();
   const originalFetch = globalThis.fetch;
@@ -619,7 +619,7 @@ test("Naver history rejects mixed payment identities", async () => {
   const database = new DatabaseSync(":memory:");
   applyMigrations(database);
   const d1 = new SqliteD1(database);
-  (globalThis as typeof globalThis & { __SITES_ENV__?: unknown }).__SITES_ENV__ = naverCheckoutEnv(d1);
+  (globalThis as typeof globalThis & { __RUNTIME_ENV__?: unknown }).__RUNTIME_ENV__ = naverCheckoutEnv(d1);
   const originalFetch = globalThis.fetch;
   globalThis.fetch = async () => Response.json({ code: "Success", body: { list: [{
     paymentId: "another_payment",
@@ -647,7 +647,7 @@ test("a Naver cancellation history tax mismatch stays locked for review", async 
   const database = new DatabaseSync(":memory:");
   applyMigrations(database);
   const d1 = new SqliteD1(database);
-  (globalThis as typeof globalThis & { __SITES_ENV__?: unknown }).__SITES_ENV__ = naverCheckoutEnv(d1);
+  (globalThis as typeof globalThis & { __RUNTIME_ENV__?: unknown }).__RUNTIME_ENV__ = naverCheckoutEnv(d1);
   seedReservation(database, "taxcan1", "slot-tax-cancel", "paid");
   database.prepare("UPDATE reservations SET payment_provider='naverpay', payment_tax_scope_amount=44000, payment_tax_ex_scope_amount=0, payment_key='npay_taxcan1' WHERE id='taxcan1'").run();
   const originalFetch = globalThis.fetch;
@@ -697,7 +697,7 @@ test("daily Naver history reconciliation discovers payments by period and runs o
   const database = new DatabaseSync(":memory:");
   applyMigrations(database);
   const d1 = new SqliteD1(database);
-  (globalThis as typeof globalThis & { __SITES_ENV__?: unknown }).__SITES_ENV__ = naverCheckoutEnv(d1);
+  (globalThis as typeof globalThis & { __RUNTIME_ENV__?: unknown }).__RUNTIME_ENV__ = naverCheckoutEnv(d1);
   seedReservation(database, "daily1", "slot-daily");
   database.prepare("UPDATE reservations SET payment_provider='naverpay', payment_tax_scope_amount=44000 WHERE id='daily1'").run();
 
@@ -749,7 +749,7 @@ test("a failed daily Naver history request releases its lock for a same-day retr
   const database = new DatabaseSync(":memory:");
   applyMigrations(database);
   const d1 = new SqliteD1(database);
-  (globalThis as typeof globalThis & { __SITES_ENV__?: unknown }).__SITES_ENV__ = naverCheckoutEnv(d1);
+  (globalThis as typeof globalThis & { __RUNTIME_ENV__?: unknown }).__RUNTIME_ENV__ = naverCheckoutEnv(d1);
   let fail = true;
   const originalFetch = globalThis.fetch;
   globalThis.fetch = async () => {
@@ -772,7 +772,7 @@ test("daily reconciliation durably retries a failed refund for a second Naver pa
   const database = new DatabaseSync(":memory:");
   applyMigrations(database);
   const d1 = new SqliteD1(database);
-  (globalThis as typeof globalThis & { __SITES_ENV__?: unknown }).__SITES_ENV__ = naverCheckoutEnv(d1);
+  (globalThis as typeof globalThis & { __RUNTIME_ENV__?: unknown }).__RUNTIME_ENV__ = naverCheckoutEnv(d1);
   seedReservation(database, "dupe01", "slot-dupe", "paid");
   database.prepare("UPDATE reservations SET payment_provider='naverpay', payment_tax_scope_amount=44000, payment_key='npay_primary' WHERE id='dupe01'").run();
 
@@ -853,7 +853,7 @@ test("refund timeout reconciliation and reviewed unpaid release never leave occu
   const database = new DatabaseSync(":memory:");
   applyMigrations(database);
   const d1 = new SqliteD1(database);
-  (globalThis as typeof globalThis & { __SITES_ENV__?: unknown }).__SITES_ENV__ = {
+  (globalThis as typeof globalThis & { __RUNTIME_ENV__?: unknown }).__RUNTIME_ENV__ = {
     DB: d1,
     TOSS_CLIENT_KEY: ["test", "gck", "unit"].join("_"),
     TOSS_SECRET_KEY: ["test", "gsk", "unit"].join("_"),
@@ -884,7 +884,7 @@ test("overlapping manual reservations close public slots and a concurrent closur
   const database = new DatabaseSync(":memory:");
   applyMigrations(database);
   const d1 = new SqliteD1(database);
-  (globalThis as typeof globalThis & { __SITES_ENV__?: unknown }).__SITES_ENV__ = naverCheckoutEnv(d1);
+  (globalThis as typeof globalThis & { __RUNTIME_ENV__?: unknown }).__RUNTIME_ENV__ = naverCheckoutEnv(d1);
   const date = addDays(kstDateKey(), 2);
   const weekday = weekdayKst(date);
   database.prepare("INSERT INTO themes (id, slug, name, short_name, genre, synopsis, duration_min, turnover_min, prices_json) VALUES ('race', 'race', '레이스', '레이스', '테스트', '테스트', 60, 30, '{\"2\":44000}')").run();
@@ -935,7 +935,7 @@ test("owner push registration, transactional outbox, and FCM delivery expose no 
     ["sign", "verify"],
   );
   const privateKey = pemPrivateKey(await crypto.subtle.exportKey("pkcs8", keyPair.privateKey));
-  (globalThis as typeof globalThis & { __SITES_ENV__?: unknown }).__SITES_ENV__ = {
+  (globalThis as typeof globalThis & { __RUNTIME_ENV__?: unknown }).__RUNTIME_ENV__ = {
     DB: d1,
     BOOKING_DATA_KEY: "unit-test-booking-data-key-32-bytes-minimum",
     BOOKING_LOOKUP_PEPPER: "unit-test-booking-lookup-pepper-32-bytes-minimum",
@@ -994,7 +994,7 @@ test("checkout requires affirmative policy attestations and snapshots the accept
   const database = new DatabaseSync(":memory:");
   applyMigrations(database);
   const d1 = new SqliteD1(database);
-  (globalThis as typeof globalThis & { __SITES_ENV__?: unknown }).__SITES_ENV__ = naverCheckoutEnv(d1);
+  (globalThis as typeof globalThis & { __RUNTIME_ENV__?: unknown }).__RUNTIME_ENV__ = naverCheckoutEnv(d1);
   const date = addDays(kstDateKey(), 3);
   const weekday = weekdayKst(date);
   database.prepare("INSERT INTO themes (id, slug, name, short_name, genre, synopsis, duration_min, turnover_min, prices_json) VALUES ('policy', 'policy', '정책 테스트', '정책', '테스트', '테스트', 60, 30, '{\"2\":44000}')").run();
@@ -1040,7 +1040,7 @@ test("checkout keeps legacy Toss active until Naver Pay is explicitly enabled", 
   const database = new DatabaseSync(":memory:");
   applyMigrations(database);
   const d1 = new SqliteD1(database);
-  (globalThis as typeof globalThis & { __SITES_ENV__?: unknown }).__SITES_ENV__ = {
+  (globalThis as typeof globalThis & { __RUNTIME_ENV__?: unknown }).__RUNTIME_ENV__ = {
     DB: d1,
     TOSS_CLIENT_KEY: ["test", "gck", "unit"].join("_"),
     TOSS_SECRET_KEY: ["test", "gsk", "unit"].join("_"),
@@ -1084,7 +1084,7 @@ test("Toss status webhook is deduplicated and reconciles a provider-side full ca
   const database = new DatabaseSync(":memory:");
   applyMigrations(database);
   const d1 = new SqliteD1(database);
-  (globalThis as typeof globalThis & { __SITES_ENV__?: unknown }).__SITES_ENV__ = {
+  (globalThis as typeof globalThis & { __RUNTIME_ENV__?: unknown }).__RUNTIME_ENV__ = {
     DB: d1,
     TOSS_CLIENT_KEY: ["test", "gck", "unit"].join("_"),
     TOSS_SECRET_KEY: ["test", "gsk", "unit"].join("_"),
@@ -1125,7 +1125,7 @@ test("retention cleanup removes operational PII while keeping and later expiring
   const database = new DatabaseSync(":memory:");
   applyMigrations(database);
   const d1 = new SqliteD1(database);
-  (globalThis as typeof globalThis & { __SITES_ENV__?: unknown }).__SITES_ENV__ = {
+  (globalThis as typeof globalThis & { __RUNTIME_ENV__?: unknown }).__RUNTIME_ENV__ = {
     DB: d1,
     BOOKING_DATA_KEY: "unit-test-booking-data-key-32-bytes-minimum",
     BOOKING_LOOKUP_PEPPER: "unit-test-booking-lookup-pepper-32-bytes-minimum",
@@ -1153,7 +1153,7 @@ test("partial administrator setting updates preserve omitted legal and booking f
   const database = new DatabaseSync(":memory:");
   applyMigrations(database);
   const d1 = new SqliteD1(database);
-  (globalThis as typeof globalThis & { __SITES_ENV__?: unknown }).__SITES_ENV__ = {
+  (globalThis as typeof globalThis & { __RUNTIME_ENV__?: unknown }).__RUNTIME_ENV__ = {
     DB: d1,
     ADMIN_SESSION_SECRET: "unit-test-admin-session-secret-32-bytes-minimum",
   };

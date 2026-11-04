@@ -1,4 +1,4 @@
-/** Cloudflare Worker entry point for the vinext-starter template. */
+/** Cloudflare Worker entry point. */
 import { handleImageOptimization, DEFAULT_DEVICE_SIZES, DEFAULT_IMAGE_SIZES } from "vinext/server/image-optimization";
 import handler from "vinext/server/app-router-entry";
 
@@ -73,15 +73,9 @@ function withApiCors(response: Response, profile: { methods: string; headers: st
   });
 }
 
-// Image security config. SVG sources with .svg extension auto-skip the
-// optimization endpoint on the client side (served directly, no proxy).
-// To route SVGs through the optimizer (with security headers), set
-// dangerouslyAllowSVG: true in next.config.js and uncomment below:
-// const imageConfig: ImageConfig = { dangerouslyAllowSVG: true };
-
 const worker = {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
-    (globalThis as typeof globalThis & { __SITES_ENV__?: Env }).__SITES_ENV__ = env;
+    (globalThis as typeof globalThis & { __RUNTIME_ENV__?: Env }).__RUNTIME_ENV__ = env;
     const url = new URL(request.url);
     const corsProfile = apiCorsProfile(url.pathname);
     const requestOrigin = request.headers.get("origin");
@@ -117,7 +111,7 @@ const worker = {
     return response;
   },
   async scheduled(_controller: unknown, env: Env, ctx: ExecutionContext): Promise<void> {
-    (globalThis as typeof globalThis & { __SITES_ENV__?: Env }).__SITES_ENV__ = env;
+    (globalThis as typeof globalThis & { __RUNTIME_ENV__?: Env }).__RUNTIME_ENV__ = env;
     ctx.waitUntil(import("@/lib/owner-push").then(({ dispatchOwnerPushes }) => dispatchOwnerPushes(25)).catch(() => undefined));
     ctx.waitUntil(import("@/lib/payment-flow").then(({ cleanupRetainedData, reconcileDailyNaverPayments, reconcileRecentProviderPayments, reconcileStalePayments }) =>
       Promise.allSettled([

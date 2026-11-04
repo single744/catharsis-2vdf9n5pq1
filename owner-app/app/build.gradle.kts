@@ -13,10 +13,9 @@ fun quoted(value: String): String =
 val ownerApiBase =
     configuredValue("OWNER_API_BASE")
         .trimEnd('/')
-        .ifBlank { "https://catharsis-escape.sosirusok.chatgpt.site" }
 
 require(ownerApiBase.startsWith("https://")) {
-    "OWNER_API_BASE must use HTTPS."
+    "OWNER_API_BASE must be set to the HTTPS booking API origin."
 }
 
 android {

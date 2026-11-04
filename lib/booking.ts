@@ -34,7 +34,7 @@ export function getBucket(): R2Bucket {
 }
 
 export function runtimeEnv(): RuntimeEnv {
-  return (globalThis as typeof globalThis & { __SITES_ENV__?: RuntimeEnv }).__SITES_ENV__ || {};
+  return (globalThis as typeof globalThis & { __RUNTIME_ENV__?: RuntimeEnv }).__RUNTIME_ENV__ || {};
 }
 
 export function getD1(): D1Database {

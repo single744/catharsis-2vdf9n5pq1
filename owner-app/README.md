@@ -19,7 +19,7 @@
 
 `owner-app` 폴더를 프로젝트로 열고 Gradle 8.9를 선택한 뒤 `app` 구성을 실행합니다.
 
-API 주소는 `OWNER_API_BASE` Gradle 속성 또는 환경변수로 바꿀 수 있습니다. 값은 반드시 `https://`로 시작해야 하며, 비어 있으면 현재 운영 API 주소를 사용합니다. 추후 전용 도메인으로 이전할 때는 GitHub 저장소의 `Settings` → `Secrets and variables` → `Actions` → `Variables`에서 `OWNER_API_BASE`만 바꾼 뒤 새 APK를 빌드하면 됩니다.
+API 주소는 `OWNER_API_BASE` Gradle 속성 또는 환경변수로 바꿀 수 있습니다. 값은 반드시 `https://`로 시작해야 하며, 비어 있으면 빌드가 중단됩니다. GitHub Actions 빌드는 저장소의 `Settings` → `Secrets and variables` → `Actions`에 등록한 `OWNER_API_BASE` 값을 사용하므로, 서버 주소가 바뀌면 이 값만 바꾼 뒤 새 APK를 빌드하면 됩니다.
 
 Firebase Android 앱의 공개 설정값은 다음 Gradle 속성 또는 환경변수로 전달합니다. 패키지명은 `kr.co.catharsis.owner`입니다.
 

@@ -58,7 +58,7 @@ jobs:
       - name: Run unit tests and build APKs
         env:
           OWNER_VERSION_CODE: ${{ github.run_number }}
-          OWNER_API_BASE: ${{ vars.OWNER_API_BASE }}
+          OWNER_API_BASE: ${{ secrets.OWNER_API_BASE || vars.OWNER_API_BASE }}
           OWNER_FIREBASE_APP_ID: ${{ vars.OWNER_FIREBASE_APP_ID }}
           OWNER_FIREBASE_PROJECT_ID: ${{ vars.OWNER_FIREBASE_PROJECT_ID }}
           OWNER_FIREBASE_SENDER_ID: ${{ vars.OWNER_FIREBASE_SENDER_ID }}
